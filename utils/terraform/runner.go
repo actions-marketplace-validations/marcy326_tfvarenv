@@ -49,6 +49,9 @@ func (r *runner) Init(ctx context.Context, opts *InitOptions) (*ExecutionResult,
 	if opts.ForceCopy {
 		args = append(args, "-force-copy")
 	}
+	if opts.Upgrade {
+		args = append(args, "-upgrade")
+	}
 	if opts.NoColor {
 		args = append(args, "-no-color")
 	}

@@ -10,6 +10,7 @@ type InitOptions struct {
 	BackendConfigs map[string]string
 	Reconfigure    bool
 	ForceCopy      bool
+	Upgrade        bool
 	NoColor        bool
 	Options        []string
 }

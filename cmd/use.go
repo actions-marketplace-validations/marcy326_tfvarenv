@@ -23,6 +23,8 @@ func NewUseCmd() *cobra.Command {
 	}
 
 	var force bool
+	var upgrade bool
+	var options []string
 
 	useCmd := &cobra.Command{
 		Use:   "use [environment]",
@@ -32,7 +34,7 @@ This command switches the Terraform backend configuration and initializes the wo
 Example: tfvarenv use production`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := runUse(cmd.Context(), utils, args[0], force); err != nil {
+			if err := runUse(cmd.Context(), utils, args[0], force, upgrade, options); err != nil {
 				fmt.Printf("Error: %v\n", err)
 				os.Exit(1)
 			}
@@ -40,10 +42,12 @@ Example: tfvarenv use production`,
 	}
 
 	useCmd.Flags().BoolVarP(&force, "force", "f", false, "Force re-initialization")
+	useCmd.Flags().BoolVar(&upgrade, "upgrade", false, "Upgrade modules and providers")
+	useCmd.Flags().StringSliceVar(&options, "options", nil, "Additional options for terraform init")
 	return useCmd
 }
 
-func runUse(ctx context.Context, utils command.Utils, envName string, force bool) error {
+func runUse(ctx context.Context, utils command.Utils, envName string, force bool, upgrade bool, options []string) error {
 	env, err := utils.GetEnvironment(envName)
 	if err != nil {
 		return fmt.Errorf("failed to get environment info: %w", err)
@@ -63,6 +67,8 @@ func runUse(ctx context.Context, utils command.Utils, envName string, force bool
 		},
 		Reconfigure: true,
 		ForceCopy:   force,
+		Upgrade:     upgrade,
+		Options:     options,
 	}
 
 	fmt.Printf("Initializing Terraform backend...\n")
