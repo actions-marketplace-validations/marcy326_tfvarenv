@@ -40,7 +40,9 @@ changelog:
       - "^test:"
 
 brews:
-  - repository:
+  - directory: Formula
+    repository:
       owner: marcy326
       name: homebrew-tap
+      branch: main
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
